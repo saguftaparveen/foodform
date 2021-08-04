@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
 class AddCategory extends StatefulWidget {
   AddCategory({Key key}) : super(key: key);
@@ -12,34 +15,66 @@ class _AddCategoryState extends State<AddCategory> {
   TextEditingController name = TextEditingController();
   TextEditingController image = TextEditingController();
   TextEditingController restroName = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            TextField(
-              controller: name,
-              decoration: InputDecoration(
-                labelText: "add Category name",
-              ),
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: name,
+                    decoration: InputDecoration(
+                      labelText: "add Category name",
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: image,
+                    decoration: InputDecoration(
+                      labelText: "add image path",
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: restroName,
+                    decoration: InputDecoration(
+                      labelText: "add restaurant Name",
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    addCategoryMethod();
+                    name.clear();
+                    image.clear();
+                    restroName.clear();
+                  },
+                  child: Text("Add Category"),
+                ),
+              ],
             ),
-            TextField(
-              controller: image,
-              decoration: InputDecoration(
-                labelText: "add image path",
-              ),
-            ),
-            TextField(
-              controller: restroName,
-              decoration: InputDecoration(
-                labelText: "add restaurant Name",
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  addCategoryMethod() async {
+    await fireStore.collection("Category").doc().set({
+      "name": name.text,
+      "image": image.text,
+      "restroName": restroName.text,
+    });
   }
 }
