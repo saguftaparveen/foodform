@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
@@ -11,6 +12,7 @@ class AddCategory extends StatefulWidget {
 }
 
 class _AddCategoryState extends State<AddCategory> {
+  DateTime time = DateTime.now();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
   TextEditingController image = TextEditingController();
@@ -55,6 +57,7 @@ class _AddCategoryState extends State<AddCategory> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    String now = DateFormat('ddMMyyyykkss').format(time);
                     addCategoryMethod();
                     name.clear();
                     image.clear();
@@ -75,6 +78,7 @@ class _AddCategoryState extends State<AddCategory> {
       "name": name.text,
       "image": image.text,
       "restroName": restroName.text,
+      'catId': time,
     });
   }
 }
